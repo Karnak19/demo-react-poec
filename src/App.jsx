@@ -1,45 +1,48 @@
-import React, { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import React, { useEffect, useState } from "react";
+import Button from "./Button";
+import Hello from "./Hello";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(50);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    fetch("https://api.randomuser.me/")
+      .then((res) => res.json())
+      .then((data) => {
+        setUser(data.results[0]);
+      });
+  }, [count]);
+
+  const users = [
+    "Clara",
+    "Rémi",
+    "Daniela",
+    "Lyudmila",
+    "Christian",
+    "Jean-Noël",
+  ];
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+    <div
+      style={{
+        fontSize: 30,
+        minHeight: "80vh",
+        display: "grid",
+        placeItems: "center",
+      }}
+    >
+      <div>count: {count}</div>
+      <div>{user.picture && <img src={user.picture.medium} alt="" />}</div>
+      <Button text="increment" onClick={() => setCount(count + 1)} />
+      <Button text="decrement" onClick={() => setCount(count - 1)} />
+      <Button text="count to 20" onClick={() => setCount(20)} />
+      hello world
+      {users.map((user) => {
+        return <Hello name={user} />;
+      })}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
